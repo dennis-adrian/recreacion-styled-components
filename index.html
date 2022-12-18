@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Styled Components</title>
+  </head>
+  <body>
+    <div id="container"></div>
+    <script>
+      function component(strings, ...dynamicValues) {
+        return (props) => {
+          let newContent = strings.slice();
+
+          dynamicValues.forEach((value, index) => {
+            newContent[index] += props[value];
+          });
+
+          return newContent.join('');
+        };
+      }
+
+      const htmlElements = [
+        'h1',
+        'h2',
+        'h3',
+        'h4',
+        'h5',
+        'h6',
+        'div',
+        'ol',
+        'ul',
+        'li',
+      ];
+
+      let elements = {};
+
+      // creat el objecto dinamicamente
+      htmlElements.forEach((element) => {
+        elements = {
+          ...elements,
+          [element]: (styles) => {
+            return (children) => {
+              return `
+              <${[element]} style="${styles}">${children}</${[element]}>
+            `;
+            };
+          },
+        };
+      });
+
+      const styled = { ...elements };
+
+      const props = {
+        message: `Don't give up`,
+      };
+
+      const TitleStyled = styled.h1`
+        color: orange;
+        font-family: system-ui;
+        text-shadow: 1px 1px 0 black;
+      `;
+
+      const Title = component`----- ${'message'} -----`(props);
+
+      function render(component, container) {
+        container.innerHTML = component;
+      }
+
+      render(TitleStyled(Title), window.container);
+    </script>
+  </body>
+</html>
